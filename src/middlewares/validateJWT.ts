@@ -7,19 +7,19 @@ import { userModel } from "../models/userModel";
 import { IUser } from "../types/express.d"; 
 
 // IMPORTANT: Use environment variable for the secret key!
-const JWT_SECRET = "AaZzBbOKokAAABbehhEhhEHHH";
+const JWT_SECRET: string = "AaZzBbOKokAAABbehhEhhEHHH";
 
 // Type alias for the decoded JWT payload
 interface JWTUserPayload {
   _id: string;
   email: string;
   fullName: string;
-  iat: number; 
+  iat: number;
 }
 
 const validateJWT = (req: Request, res: Response, next: NextFunction) => {
   const authorizationHeader = req.get("authorization");
-  
+
   // 1. Check for Header
   if (!authorizationHeader) {
     return res.status(403).send("Authorization Header wasn't provided");
@@ -27,10 +27,12 @@ const validateJWT = (req: Request, res: Response, next: NextFunction) => {
 
   // 2. Check for Token Format (Bearer ...)
   const parts = authorizationHeader.split(" ");
-  if (parts.length !== 2 || parts[0] !== 'Bearer') {
-     return res.status(403).send("Authorization header format is 'Bearer <token>'");
+  if (parts.length !== 2 || parts[0] !== "Bearer") {
+    return res
+      .status(403)
+      .send("Authorization header format is 'Bearer <token>'");
   }
-  const token = parts[1];
+  const token = parts[1]!; // Non-null assertion: we've validated parts.length === 2
 
   // 3. Verify Token
   jwt.verify(token, JWT_SECRET, async (err, payload) => {
@@ -44,7 +46,7 @@ const validateJWT = (req: Request, res: Response, next: NextFunction) => {
 
     // 4. Find User in DB
     const userPayload = payload as JWTUserPayload;
-    
+
     // Find the user object (excluding the password)
     // Using .lean() for performance since we don't need Mongoose document methods
     const user = await userModel.findOne({ email: userPayload.email }).lean();
@@ -54,8 +56,8 @@ const validateJWT = (req: Request, res: Response, next: NextFunction) => {
     }
 
     // 5. Attach User to Request (The fix for req.user error)
-    req.user = user as IUser; 
-    
+    req.user = user;
+
     // 6. Proceed to the next middleware or route handler (The Logic Fix)
     next();
   });
