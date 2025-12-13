@@ -11,7 +11,7 @@ router.post("/register", async (request, response) => {
     fullName,
     email,
     password,
-    phoneNumber,
+    phoneNumber
   });
   response.status(statusCode).send(data);
 });
