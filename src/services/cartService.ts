@@ -8,7 +8,7 @@ interface CreateCartForUser {
 
 const createCartForUser = async ({ userId }: CreateCartForUser) => {
   // Note: Using findOneAndUpdate with upsert: true can be a cleaner alternative
-  const cart = await cartModel.create({ userId });
+  const cart = await cartModel.create({ userId , totalAmount: 0});
   // The .create method typically saves the document, so .save() might be redundant 
   // await cart.save(); 
   return cart;
