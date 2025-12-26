@@ -11,7 +11,7 @@ const port = 3001;
 app.use(express.json());
 
 mongoose
-  .connect("mongodb://localhost:27017/E-commerce")
+  .connect("mongodb://127.0.0.1:27017/E-commerce")
   .then(() => console.log("MongoDB connected ✅"))
   .catch((err) => console.log("MongoDB failed ❌", err));
 

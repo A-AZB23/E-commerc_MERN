@@ -1,9 +1,5 @@
-// src/types/express.d.ts
-
 import { Document, Types } from "mongoose";
 
-// Define the shape of your User Mongoose Document
-// Including _id and making password optional since it's typically excluded after auth
 export interface IUser extends Document {
   _id: string; // Mongoose Document has _id
   fullName: string;
@@ -12,7 +8,6 @@ export interface IUser extends Document {
   phoneNumber: string;
 }
 
-// Type for lean user object (returned by .lean())
 export interface IUserLean {
   _id: Types.ObjectId;
   fullName: string;
